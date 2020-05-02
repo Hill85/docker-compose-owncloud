@@ -1,0 +1,31 @@
+version: '3.4'
+services:
+     mysql:  
+      image: mysql:5.5
+      restart: always
+      container_name: mysql-owncloud
+      volumes:
+         - db-mysql:/var/lib/mysql
+         - "/etc/localtime:/etc/localtime:ro"
+      networks:
+         - net-backend
+      environment:
+         MYSQL_ROOT_PASSWORD: root
+     owncloud:
+      image: owncloud
+      depends_on:
+         - mysql     
+      restart: always
+      networks:
+         - net-backend 
+      volumes:
+         - "/home/hill/compose-owncloud/apps:/var/www/html/apps"
+         - "/home/hill/compose-owncloud/config:/home/hill/compose-owncloud"
+         - "/home/hill/compose-owncloud/data:/var/www/html/data"
+         - "/etc/localtime:/etc/localtime:ro"
+      ports:
+         - 9090:80
+volumes:
+    db-mysql:    
+networks:
+    net-backend:        
